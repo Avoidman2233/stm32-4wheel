@@ -7,7 +7,11 @@
 #define RC_PULSE_MIN        850
 #define RC_PULSE_MAX        2200
 #define RC_PULSE_CENTER     1500
-#define RC_CH1_CENTER       1575
+#define RC_CH1_LEFT_US      1000    /* 5% of a 20ms RC frame */
+#define RC_CH1_RIGHT_US     2200    /* 11% of a 20ms RC frame */
+#define RC_CH1_CENTER       1600
+#define RC_CH2_MIN_US       850
+#define RC_CH2_MAX_US       2200
 #define RC_CH2_CENTER       1500
 #define RC_CH1_DEADZONE     120
 #define RC_CH2_DEADZONE     140

@@ -90,7 +90,8 @@ static int32_t abs_i32(int32_t val)
     return (val < 0) ? -val : val;
 }
 
-static int32_t rc_axis_to_percent(int32_t pulse, int32_t center,
+static int32_t rc_axis_to_percent(int32_t pulse, int32_t min_us,
+                                  int32_t center, int32_t max_us,
                                   int32_t deadzone, uint8_t reversed)
 {
     int32_t offset = pulse - center;
@@ -98,10 +99,13 @@ static int32_t rc_axis_to_percent(int32_t pulse, int32_t center,
 
     if (offset >= -deadzone && offset <= deadzone) return 0;
 
+    pulse = constrain(pulse, min_us, max_us);
+    offset = pulse - center;
+
     if (offset > 0) {
-        pct = offset * 100 / (RC_PULSE_MAX - center);
+        pct = offset * 100 / (max_us - center);
     } else {
-        pct = offset * 100 / (center - RC_PULSE_MIN);
+        pct = offset * 100 / (center - min_us);
     }
 
     pct = constrain(pct, -100, 100);
@@ -138,10 +142,12 @@ static void drive_write(int32_t left_pct, int32_t right_pct)
 static void rc_to_motor(int32_t *left_pct, int32_t *right_pct,
                         int32_t ch1_filt, int32_t ch2_filt)
 {
-    int32_t throttle_pct = rc_axis_to_percent(ch2_filt, RC_CH2_CENTER,
+    int32_t throttle_pct = rc_axis_to_percent(ch2_filt, RC_CH2_MIN_US,
+                                              RC_CH2_CENTER, RC_CH2_MAX_US,
                                               RC_CH2_DEADZONE,
                                               RC_THROTTLE_REVERSED);
-    int32_t steering_pct = rc_axis_to_percent(ch1_filt, RC_CH1_CENTER,
+    int32_t steering_pct = rc_axis_to_percent(ch1_filt, RC_CH1_LEFT_US,
+                                              RC_CH1_CENTER, RC_CH1_RIGHT_US,
                                               RC_CH1_DEADZONE,
                                               RC_STEERING_REVERSED);
 

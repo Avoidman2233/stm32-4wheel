@@ -1,0 +1,13 @@
+# Build outputs
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+
+# Local/runtime state
+.slim/
+
+# Vendor HAL checkouts are restored with the setup commands in AGENTS.md
+motor_test/STM32CubeF4/
+motor_test_f103/STM32CubeF1/

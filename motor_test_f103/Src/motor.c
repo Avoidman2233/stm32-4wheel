@@ -154,4 +154,18 @@ void Motor_Reverse(MotorChannel ch, uint8_t percent)
     Motor_SetSpeedPercent(ch, percent);
 }
 
-void Motor_EmergencyStop(void) { Motor_Brake(MOTOR_CH1); Motor_Brake(MOTOR_CH2); }
+void Motor_EmergencyStop(void)
+{
+    Motor_SetSpeed(MOTOR_CH1, 0);
+    Motor_SetSpeed(MOTOR_CH2, 0);
+
+    HAL_GPIO_WritePin(MOTOR1_INA_PORT, MOTOR1_INA_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(MOTOR1_INB_PORT, MOTOR1_INB_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(MOTOR2_INA_PORT, MOTOR2_INA_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(MOTOR2_INB_PORT, MOTOR2_INB_PIN, GPIO_PIN_RESET);
+
+    last_state[MOTOR_CH1] = MOTOR_BRAKE;
+    last_state[MOTOR_CH2] = MOTOR_BRAKE;
+    last_percent[MOTOR_CH1] = 0;
+    last_percent[MOTOR_CH2] = 0;
+}

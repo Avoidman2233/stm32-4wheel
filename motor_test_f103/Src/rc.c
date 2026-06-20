@@ -63,7 +63,7 @@ void RC_Init(void)
 
     GPIO_InitTypeDef gpio = {0};
     gpio.Mode = GPIO_MODE_AF_INPUT;
-    gpio.Pull = GPIO_PULLUP;
+    gpio.Pull = GPIO_PULLDOWN;
     gpio.Speed = GPIO_SPEED_FREQ_LOW;
 
     /* CH2 (throttle): PA1 -> TIM2_CH2 */

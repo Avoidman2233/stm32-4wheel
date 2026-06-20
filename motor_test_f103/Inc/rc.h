@@ -15,6 +15,7 @@
 #define RC_CH2_CENTER       1500
 #define RC_CH1_DEADZONE     120
 #define RC_CH2_DEADZONE     140
+#define RC_FAILSAFE_LOW_US  930
 #define RC_VALID_MIN        700
 #define RC_VALID_MAX        (RC_PULSE_MAX + 100)
 #define RC_FRAME_MIN_US     12000

@@ -12,7 +12,7 @@
 #define DEBUG_BAUDRATE      115200
 
 /* Signal loss timeout (ms) */
-#define SIGNAL_LOSS_MS      500
+#define SIGNAL_LOSS_MS      120
 #define CONTROL_PERIOD_MS   20
 
 /* Wiring trims: change these if left/right motors or RC directions are reversed. */
@@ -237,17 +237,19 @@ int main(void)
 
         uint8_t rc_valid = ch1_seen && ch2_seen
                          && ((now - ch1_lost_since) <= SIGNAL_LOSS_MS)
-                         && ((now - ch2_lost_since) <= SIGNAL_LOSS_MS);
+                         && ((now - ch2_lost_since) <= SIGNAL_LOSS_MS)
+                         && !(ch1_filt <= RC_FAILSAFE_LOW_US
+                              && ch2_filt <= RC_FAILSAFE_LOW_US);
 
-        /* ---- Emergency stop: either channel lost for >100ms ---- */
+        /* ---- Emergency stop: either channel lost ---- */
         if (!rc_valid) {
+            Motor_EmergencyStop();
+            ch1_filt = RC_CH1_CENTER;
+            ch2_filt = RC_CH2_CENTER;
+            last_left = 0;
+            last_right = 0;
             if (rc_was_valid) {
-                Motor_EmergencyStop();
                 rc_was_valid = 0;
-                ch1_filt = RC_CH1_CENTER;
-                ch2_filt = RC_CH2_CENTER;
-                last_left = 0;
-                last_right = 0;
                 debug_print("Signal lost - emergency stop\r\n");
             }
         } else {
